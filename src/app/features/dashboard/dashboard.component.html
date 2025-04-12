@@ -1,0 +1,134 @@
+<div class="dashboard-container">
+  <mat-card>
+    <mat-card-title>
+      <div class="dashboard-header">
+        <h4 class="dashboard-title">Trang chủ</h4>
+        <button mat-button class="btn-download">
+          <mat-icon>file_download</mat-icon>
+          Xuất file
+        </button>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <form>
+        <div class="form-search">
+          <mat-form-field  appearance="outline" class="field-search">
+            <mat-label>Tìm kiếm sản phẩm</mat-label>
+            <input matInput type="search" name="currentSearch"
+                   placeholder="Tìm kiếm sản phẩm">
+            <button mat-icon-button matPrefix aria-label="search" >
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tất cả khu vực</mat-label>
+            <mat-select>
+              <mat-option value="">Tất cả khu vực</mat-option>
+              <mat-option ></mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tất cả địa bàn</mat-label>
+            <mat-select>
+              <mat-option value="">Tất cả địa bàn</mat-option>
+              <mat-option ></mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tất cả đại lý</mat-label>
+            <mat-select>
+              <mat-option value="">Tất cả đại lý</mat-option>
+              <mat-option ></mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tất cả trạng thái</mat-label>
+            <mat-select>
+              <mat-option value="">Tất cả trạng thái</mat-option>
+              <mat-option ></mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="table-wrapper">
+        <div class="table-header">
+          <div class="col stt">STT</div>
+          <div class="col code">MÃ SP</div>
+          <div class="col name">TÊN SP</div>
+          <div class="col group">NHÓM NGÀNH</div>
+          <div class="col status">TRẠNG THÁI</div>
+          <div class="col agent">ĐẠI LÝ PHỤ TRÁCH</div>
+          <div class="col company">CÔNG TY PHÂN PHỐI</div>
+        </div>
+
+        <div
+          cdkDropList
+          [cdkDropListData]="data"
+          (cdkDropListDropped)="dropArea($event)"
+          class="area-list"
+        >
+          <ng-container *ngFor="let area of data">
+            <div class="area" cdkDrag>
+              <div class="area-header" (click)="toggleArea(area)">
+                <div class="area-name">
+                  <span class="toggle-icon">{{ area.expanded ? '📂' : '📁' }}</span>
+                  {{ area.name }}
+                </div>
+                <div class="note">➕ Thêm chú thích</div>
+              </div>
+
+              <div *ngIf="area.expanded">
+                <ng-container *ngFor="let hospital of area.hospitals">
+                  <div class="hospital">
+                    <div class="hospital-header" >
+                      <div class="hopital-name" (click)="toggleHospital(hospital)">
+                        <span class="toggle-icon">{{ hospital.expanded ? '➖' : '➕' }}</span>
+                        {{ hospital.name }}({{hospital.products.length}})
+                      </div>
+                      <div class="note">➕ Thêm chú thích</div>
+                    </div>
+
+                    <div *ngIf="hospital.expanded">
+                      <div *ngFor="let product of getPagedProducts(hospital)" class="table-row">
+                        <div class="col stt">{{ product.stt }}</div>
+                        <div class="col code">{{ product.code }}</div>
+                        <div class="col name">{{ product.name }}</div>
+                        <div class="col group">{{ product.industry }}</div>
+                        <div class="col status"
+                             [ngClass]="{
+                            'status-success': product.status === 'Đang triển khai',
+                            'status-error': product.status === 'Không được triển khai',
+                            'status-progress': product.status === 'Chưa triển khai',
+                          }"
+                        >
+                          {{ product.status }}
+                        </div>
+                        <div class="col agent">{{ product.agent }}</div>
+                        <div class="col company">{{ product.company }}</div>
+                        <div class="col action">
+                          <div class="action-icon"><mat-icon>edit</mat-icon></div>
+                          <div class="action-icon"><mat-icon>delete</mat-icon></div>
+                        </div>
+                      </div>
+                      <mat-paginator
+                      [length]="hospital.products.length"
+                      [pageIndex]="hospital.pageIndex"
+                      [pageSize]="hospital.pageSize"
+                      [pageSizeOptions]="[2, 5, 7]"
+                      (page)="onHospitalPage($event, hospital)"
+                      [showFirstLastButtons]="true"
+                      >
+                      </mat-paginator>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,94 @@
+$header-height: 64px;
+$spacing-unit: 10px;
+
+mat-toolbar.header {
+  width: 100%;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: $header-height;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 250px;
+  .header-logo {
+    display: flex;
+    align-items: center;
+  }
+  .header-menu{
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: #5f6368 1px solid;
+
+
+    > mat-icon {
+      font-size: 3px;
+    }
+  }
+}
+
+.app-name {
+  font-weight: 500;
+  font-size: 1em;
+  margin-right: 15px;
+  margin-left: $spacing-unit;
+  color: black;
+}
+
+.page-title {
+  font-size: 1.1em;
+  font-weight: 500;
+  color: black;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: $spacing-unit;
+}
+
+.header-right button {
+  color: black;
+}
+
+.header-right button mat-icon {
+  margin-right: 6px;
+}
+
+.admin-button mat-icon:last-child {
+  margin-left: 2px;
+  margin-right: 0;
+}
+
+::ng-deep .notification-button .mat-badge-content {
+  font-size: 10px !important;
+  font-weight: bold;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10px !important;
+  right: 5px !important;
+}
+

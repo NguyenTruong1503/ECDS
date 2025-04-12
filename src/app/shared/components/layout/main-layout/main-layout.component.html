@@ -1,0 +1,14 @@
+<!-- main-layout.component.html -->
+<div class="main-container">
+  <mat-toolbar class="mat-toolbar">
+    <app-header (toggleSidenav) = 'onSiveNavToggle($event)'></app-header>
+  </mat-toolbar>
+  <mat-sidenav-container>
+    <mat-sidenav mode="side" opened class="sidebar" [style.width]="sidenavWidth()" >
+      <app-sidebar ></app-sidebar>
+    </mat-sidenav>
+    <mat-sidenav-content class="main-content" [style.margin-left]="sidenavWidth()">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

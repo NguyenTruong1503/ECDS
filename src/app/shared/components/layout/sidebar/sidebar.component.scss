@@ -1,0 +1,29 @@
+:host * {
+  transition: all 1s ease-in-out;
+}
+
+.sidebar {
+  padding: 0 !important;
+  mat-list-item {
+    padding: 20px 0;
+    margin-bottom: 10px;
+  }
+  mat-list-item.active {
+    background-color: #e0e0e0;
+    color: #1976d2;
+    border-radius: 0 ;
+  }
+
+
+  mat-list-item.active mat-icon {
+    color: #1976d2;
+  }
+
+  mat-list-item.active span{
+    color: #1976d2;
+  }
+  mat-list-item:hover {
+    background-color: #e0e0e0;
+    border-radius: 0 ;
+  }
+}
