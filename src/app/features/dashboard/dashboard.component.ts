@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -12,32 +12,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import {FlexModule} from '@angular/flex-layout';
+import { HttpClientModule} from '@angular/common/http';
+import {Hospital, HospitalExpand} from '../../models/hospital.model';
+import {Product} from '../../models/product.model';
+import {AgentService} from '../../services/agent.service';
 
-
-export interface Product {
-  stt: number;
-  code: string;
-  name: string;
-  industry: string;
-  status: string;
-  agent: string;
-  company: string;
-}
-
-export interface Hospital {
-  name: string;
-  products: Product[];
-  expanded?: boolean;
-  pageIndex?: number;
-  pageSize?: number;
-}
-
-export interface Area {
-  name: string;
-  hospitals: Hospital[];
-  expanded?: boolean;
-}
+import {RegionService} from '../../services/region.service';
+import {IRegion, RegionExpand} from '../../models/region.model';
+import {HospitalService} from '../../services/hospital.service';
+import {ProductService} from '../../services/product.service';
+import {FormsModule} from '@angular/forms';
+import {Agent} from '../../models/agent.model';
 
 
 @Component({
@@ -59,64 +44,28 @@ export interface Area {
     MatCardTitle,
     MatCardContent,
     DragDropModule,
-
+    HttpClientModule,
+    FormsModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent  {
-  data: Area[] = [
-    {
-      name: 'Hồ Chí Minh',
-      expanded: true,
-      hospitals: [
-        {
-          name: 'BV Quận 1',
-          expanded: true,
-          pageIndex: 0,
-          pageSize: 5,
-          products: [
-            { stt: 1, code: 'SP001', name: 'KALI CLORID KABI 10%', industry: 'Tân dược', status: 'Đang triển khai', agent: 'Phạm Tuấn Anh', company: 'CT-CPDPV-BPM' },
-            { stt: 2, code: 'SP002', name: 'PARTAMOL 500 CAP', industry: 'Tân dược', status: 'Đang triển khai', agent: 'Phạm Ngọc Anh', company: 'CT-CPDPV-BPM' },
-            { stt: 3, code: 'SP003', name: 'AUROLIZA 30', industry: 'Tân dược', status: 'Không được triển khai', agent: '', company: '' },
-            { stt: 4, code: 'SP004', name: 'OLESOM', industry: 'Tân dược', status: 'Không được triển khai', agent: '', company: '' },
-            { stt: 5, code: 'SP005', name: 'POVIDONE', industry: 'Tân dược', status: 'Chưa triển khai', agent: '', company: '' }
-          ]
-        },
-        {
-          name: 'BV Quận 2',
-          expanded: false,
-          pageIndex: 0,
-          pageSize: 5,
-          products: [
-            { stt: 1, code: 'SP006', name: 'KALI CLORID KABI 10%', industry: 'Tân dược', status: 'Đang triển khai', agent: 'Phạm Tuấn Anh', company: 'CT-CPDPV-BPM' }
-          ]
-        }
-      ]
-    },
-    {
-      name: 'Bình Dương',
-      expanded: false,
-      hospitals: [
-        {
-          name: 'BV Đa Khoa Bình Dương',
-          expanded: false,
-          pageIndex: 0,
-          pageSize: 5,
-          products: []
-        },
-        {
-          name: 'BV Quốc Tế Becamex',
-          expanded: false,
-          pageIndex: 0,
-          pageSize: 5,
-          products: []
-        }
-      ]
-    }
-  ];
+export class DashboardComponent implements OnInit {
 
-  displayedColumns: string[] = ['stt', 'code', 'name', 'industry', 'status', 'agent', 'company'];
+  private regionService = inject(RegionService);
+  private hositalService = inject(HospitalService);
+  private productService = inject(ProductService);
+  private agentService = inject(AgentService);
+  regions: RegionExpand[] = [];
+  regionsData : IRegion[] = [];
+  hospitalsData: Hospital[] = [];
+  agentsData: Agent[] = [];
+  regionId: string = '';
+  hospitalId: string = '';
+  agentId: string = '';
+
+  constructor() {
+  }
 
   toggleArea(area: any) {
     area.expanded = !area.expanded;
@@ -126,17 +75,85 @@ export class DashboardComponent  {
     hospital.expanded = !hospital.expanded;
   }
 
-  dropArea(event: CdkDragDrop<Area[]>) {
-    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+  dropArea(event: CdkDragDrop<RegionExpand[]>) {
+    moveItemInArray(this.regions, event.previousIndex, event.currentIndex);
   }
 
-  onHospitalPage(event: PageEvent, hospital: Hospital) {
+
+  ngOnInit(): void {
+    this.loadRegions();
+    this.getListHospital('');
+    this.getListAgent();
+  }
+
+  loadRegions() {
+    this.regionService.getRegions().subscribe(regions => {
+      this.regions = regions;
+      this.regionsData = regions;
+      for (let region of this.regions) {
+        this.loadHospitals(region._id, region);
+      }
+    })
+  }
+
+  onChangeRegion(e: any) {
+    this.regionId = e.value;
+    this.hospitalId = '';
+    if (e.value) {
+      this.hospitalsData = [];
+      this.getListHospital(e.value);
+    } else {
+      this.hospitalsData = [];
+      this.getListHospital('');
+    }
+  }
+
+  getListHospital(id: string){
+    if (id) {
+      this.hositalService.getHospitals(id).subscribe(hospital => {
+        this.hospitalsData = hospital;
+      })
+    } else {
+      this.hositalService.getAllHospitals().subscribe(hospital => {
+        this.hospitalsData = hospital;
+      })
+    }
+  }
+
+  getListAgent() {
+    this.agentService.getAllAgents().subscribe(agent => {
+      this.agentsData = agent;
+      console.log( "Agent là data ", this.agentsData);
+    })
+  }
+
+  loadHospitals(regionId: string, region: RegionExpand) {
+    this.hositalService.getHospitals(regionId).subscribe(hospitals => {
+      region.hospital = hospitals;
+      for (let hospital of region.hospital) {
+        this.loadProducts(hospital._id, hospital);
+      }
+    })
+  }
+
+  loadProducts(hospitalId: string, hospital: HospitalExpand) {
+    this.productService.getProductsByHospitalId(hospitalId).subscribe(products => {
+      hospital.products = products;
+      hospital.pageIndex = 0;
+      hospital.pageSize = 5;
+      hospital.pageProducts = this.getPageData(products, hospital.pageIndex, hospital.pageSize);
+    })
+  }
+
+  getPageData(products: Product[], pageIndex: number, pageSize: number):Product[] {
+    const startIndex = pageIndex * pageSize;
+    return products.slice(startIndex, startIndex + pageSize);
+  }
+
+  // Sự kiện phân trang
+  onHospitalPage(event: PageEvent, hospital: HospitalExpand) {
     hospital.pageIndex = event.pageIndex;
     hospital.pageSize = event.pageSize;
-  }
-
-  getPagedProducts(hospital: Hospital):Product[] {
-    const startIndex = (hospital.pageIndex ?? 0) * (hospital.pageSize ?? 5);
-    return hospital.products.slice(startIndex, startIndex + (hospital.pageSize ?? 5));
+    hospital.pageProducts = this.getPageData(hospital.products || [], hospital.pageIndex, hospital.pageSize);
   }
 }

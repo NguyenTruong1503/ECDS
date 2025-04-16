@@ -23,23 +23,23 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Tất cả khu vực</mat-label>
-            <mat-select>
-              <mat-option value="">Tất cả khu vực</mat-option>
-              <mat-option ></mat-option>
+            <mat-select (selectionChange)="onChangeRegion($event)"  [(ngModel)]="regionId" name="region">
+              <mat-option value="" >Tất cả khu vực</mat-option>
+              <mat-option *ngFor="let region of regionsData" [value]="region._id">{{region.name}}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Tất cả địa bàn</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]="hospitalId" name="hospital">
               <mat-option value="">Tất cả địa bàn</mat-option>
-              <mat-option ></mat-option>
+              <mat-option *ngFor="let hospital of hospitalsData" [value]="hospital._id">{{hospital.name}}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Tất cả đại lý</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]="agentId" name="agent">
               <mat-option value="">Tất cả đại lý</mat-option>
-              <mat-option ></mat-option>
+              <mat-option *ngFor="let agent of agentsData" [value]="agent._id">{{agent.name}}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -65,11 +65,11 @@
 
         <div
           cdkDropList
-          [cdkDropListData]="data"
+          [cdkDropListData]="regions"
           (cdkDropListDropped)="dropArea($event)"
           class="area-list"
         >
-          <ng-container *ngFor="let area of data">
+          <ng-container *ngFor="let area of regions">
             <div class="area" cdkDrag>
               <div class="area-header" (click)="toggleArea(area)">
                 <div class="area-name">
@@ -80,18 +80,18 @@
               </div>
 
               <div *ngIf="area.expanded">
-                <ng-container *ngFor="let hospital of area.hospitals">
+                <ng-container *ngFor="let hospital of area.hospital">
                   <div class="hospital">
                     <div class="hospital-header" >
                       <div class="hopital-name" (click)="toggleHospital(hospital)">
                         <span class="toggle-icon">{{ hospital.expanded ? '➖' : '➕' }}</span>
-                        {{ hospital.name }}({{hospital.products.length}})
+                        {{ hospital.name }}({{hospital.products?.length}})
                       </div>
                       <div class="note">➕ Thêm chú thích</div>
                     </div>
 
                     <div *ngIf="hospital.expanded">
-                      <div *ngFor="let product of getPagedProducts(hospital)" class="table-row">
+                      <div *ngFor="let product of hospital.pageProducts" class="table-row">
                         <div class="col stt">{{ product.stt }}</div>
                         <div class="col code">{{ product.code }}</div>
                         <div class="col name">{{ product.name }}</div>
@@ -105,7 +105,7 @@
                         >
                           {{ product.status }}
                         </div>
-                        <div class="col agent">{{ product.agent }}</div>
+                        <div class="col agent">{{ product.agentId?.name }}</div>
                         <div class="col company">{{ product.company }}</div>
                         <div class="col action">
                           <div class="action-icon"><mat-icon>edit</mat-icon></div>
@@ -114,11 +114,12 @@
                       </div>
                       <mat-paginator
                       [length]="hospital.products.length"
-                      [pageIndex]="hospital.pageIndex"
-                      [pageSize]="hospital.pageSize"
+                      [pageIndex]="hospital.pageIndex || 0"
+                      [pageSize]="hospital.pageSize || 5"
                       [pageSizeOptions]="[2, 5, 7]"
                       (page)="onHospitalPage($event, hospital)"
                       [showFirstLastButtons]="true"
+                      *ngIf="hospital.products && hospital.products.length > 0"
                       >
                       </mat-paginator>
                     </div>
