@@ -3,6 +3,12 @@ import {Hospital} from './hospital.model';
 
 export type ProductStatus = 'Đang triển khai' | 'Chưa triển khai' | 'Không được triển khai';
 
+export const PRODUCT_STATUSES: ProductStatus[] = [
+  'Đang triển khai',
+  'Chưa triển khai',
+  'Không được triển khai'
+];
+
 export interface IProduct {
   _id: string;
   stt: number;

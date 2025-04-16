@@ -12,4 +12,8 @@ export class ProductService {
   getProductsByHospitalId(hospitalId: string) : Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}/hospital/${hospitalId}`);
   }
+
+  getListAllCompany() : Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/companies`);
+  }
 }

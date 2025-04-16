@@ -14,7 +14,7 @@ import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import { HttpClientModule} from '@angular/common/http';
 import {Hospital, HospitalExpand} from '../../models/hospital.model';
-import {Product} from '../../models/product.model';
+import {Product, PRODUCT_STATUSES, ProductStatus} from '../../models/product.model';
 import {AgentService} from '../../services/agent.service';
 
 import {RegionService} from '../../services/region.service';
@@ -60,9 +60,12 @@ export class DashboardComponent implements OnInit {
   regionsData : IRegion[] = [];
   hospitalsData: Hospital[] = [];
   agentsData: Agent[] = [];
+  companyData: string[] = [];
   regionId: string = '';
   hospitalId: string = '';
   agentId: string = '';
+  productStatuses: ProductStatus[] = PRODUCT_STATUSES;
+  selectedStatus: ProductStatus | '' = '';
 
   constructor() {
   }
@@ -84,6 +87,7 @@ export class DashboardComponent implements OnInit {
     this.loadRegions();
     this.getListHospital('');
     this.getListAgent();
+    this.getListAllCompany();
   }
 
   loadRegions() {
@@ -127,6 +131,12 @@ export class DashboardComponent implements OnInit {
     })
   }
 
+  getListAllCompany() {
+    this.productService.getListAllCompany().subscribe(company => {
+      this.companyData = company;
+    })
+  }
+
   loadHospitals(regionId: string, region: RegionExpand) {
     this.hositalService.getHospitals(regionId).subscribe(hospitals => {
       region.hospital = hospitals;
@@ -156,4 +166,6 @@ export class DashboardComponent implements OnInit {
     hospital.pageSize = event.pageSize;
     hospital.pageProducts = this.getPageData(hospital.products || [], hospital.pageIndex, hospital.pageSize);
   }
+
+  protected readonly PRODUCT_STATUSES = PRODUCT_STATUSES;
 }
