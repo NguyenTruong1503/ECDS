@@ -110,6 +110,20 @@ export class DashboardComponent implements OnInit {
       this.hospitalsData = [];
       this.getListHospital('');
     }
+    this.loadData();
+  }
+
+  onChangeHospital(e: any) {
+    this.loadData();
+  }
+
+  onChangeAgent(e: any) {
+    this.agentId = e.value;
+    this.loadData();
+  }
+  onChangeStatus(e: any) {
+    this.selectedStatus = e.value;
+    this.loadData();
   }
 
   getListHospital(id: string){
@@ -166,6 +180,65 @@ export class DashboardComponent implements OnInit {
     hospital.pageSize = event.pageSize;
     hospital.pageProducts = this.getPageData(hospital.products || [], hospital.pageIndex, hospital.pageSize);
   }
+
+  loadData() {
+    const body: any = {};
+    if (this.regionId) {
+      body.regionId = this.regionId;
+    }
+    if (this.hospitalId) {
+      body.hospitalId = this.hospitalId;
+    }
+    if (this.agentId) {
+      body.agentId = this.agentId;
+    }
+    if (this.selectedStatus) {
+      body.status = this.selectedStatus;
+    }
+    if (Object.keys(body).length === 0) {
+      this.loadRegions();
+    } else {
+      this.productService.getFilteredProducts(body).subscribe(products => {
+        this.regions = this.buildRegionTree(products);
+      })
+    }
+  }
+
+  buildRegionTree(products: Product[]): RegionExpand[] {
+    const regionMap = new Map<string, RegionExpand>();
+
+    for (const product of products) {
+      const hospital = product?.hospitalId;
+      const region = hospital?.regionId;
+      const regionId = region?._id;
+      const regionName = region?.name;
+      const hospitalId = hospital?._id;
+      const hospitalName = hospital?.name;
+
+      if (!regionId || !hospitalId) continue;
+
+      if (!regionMap.has(regionId)) {
+        regionMap.set(regionId, new RegionExpand(regionId, regionName || '', false, []));
+      }
+      const regionItem = regionMap.get(regionId)!;
+
+      let hospitalItem = regionItem.hospital?.find(h => h._id === hospitalId);
+
+      if (!hospitalItem) {
+        hospitalItem = new HospitalExpand(hospitalId, hospitalName || '',0, 5, region, [], false, []);
+        regionItem.hospital?.push(hospitalItem);
+      }
+      hospitalItem.products?.push(product);
+    }
+    for (const region of regionMap.values()) {
+      for (const hospital of region.hospital || []) {
+        hospital.pageProducts = this.getPageData(hospital.products || [], hospital.pageIndex, hospital.pageSize);
+      }
+    }
+    return Array.from(regionMap.values());
+  }
+
+
 
   protected readonly PRODUCT_STATUSES = PRODUCT_STATUSES;
 }

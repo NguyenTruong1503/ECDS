@@ -42,7 +42,7 @@ export class Product implements IProduct {
     this.status = status;
     this.agentId = agentId ? agentId : undefined;
     this.company = company ? company : undefined;
-    this.hospitalId = hospitalId ;
+    this.hospitalId = hospitalId ? hospitalId : undefined;
   }
 }
 

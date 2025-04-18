@@ -1,8 +1,8 @@
 import {HospitalExpand} from './hospital.model';
 
 export interface IRegion {
-  _id?: string;
-  name?: string;
+  _id: string;
+  name: string;
   hospital?: HospitalExpand[];
 }
 

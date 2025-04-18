@@ -30,21 +30,21 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Tất cả địa bàn</mat-label>
-            <mat-select [(ngModel)]="hospitalId" name="hospital">
+            <mat-select (selectionChange)="onChangeHospital($event)"  [(ngModel)]="hospitalId" name="hospital">
               <mat-option value="">Tất cả địa bàn</mat-option>
               <mat-option *ngFor="let hospital of hospitalsData" [value]="hospital._id">{{hospital.name}}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Tất cả đại lý</mat-label>
-            <mat-select [(ngModel)]="agentId" name="agent">
+            <mat-select (selectionChange)="onChangeAgent($event)" [(ngModel)]="agentId" name="agent">
               <mat-option value="">Tất cả đại lý</mat-option>
               <mat-option *ngFor="let agent of agentsData" [value]="agent._id">{{agent.name}}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Tất cả trạng thái</mat-label>
-            <mat-select [(ngModel)]="selectedStatus">
+            <mat-select (selectionChange)="onChangeStatus($event)" [(ngModel)]="selectedStatus" name="status">
               <mat-option value="">Tất cả trạng thái</mat-option>
               <mat-option *ngFor="let status of productStatuses" [value]="status">
                 {{ status }}
@@ -73,8 +73,8 @@
         >
           <ng-container *ngFor="let area of regions">
             <div class="area" cdkDrag>
-              <div class="area-header" (click)="toggleArea(area)">
-                <div class="area-name">
+              <div class="area-header" >
+                <div class="area-name" (click)="toggleArea(area)">
                   <span class="toggle-icon">{{ area.expanded ? '📂' : '📁' }}</span>
                   {{ area.name }}
                 </div>
@@ -115,13 +115,13 @@
                         </div>
                       </div>
                       <mat-paginator
-                      [length]="hospital.products.length"
-                      [pageIndex]="hospital.pageIndex || 0"
-                      [pageSize]="hospital.pageSize || 5"
-                      [pageSizeOptions]="[2, 5, 7]"
-                      (page)="onHospitalPage($event, hospital)"
-                      [showFirstLastButtons]="true"
-                      *ngIf="hospital.products && hospital.products.length > 0"
+                        [length]="hospital.products.length"
+                        [pageIndex]="hospital.pageIndex || 0"
+                        [pageSize]="hospital.pageSize || 5"
+                        [pageSizeOptions]="[2, 5, 7]"
+                        (page)="onHospitalPage($event, hospital)"
+                        [showFirstLastButtons]="true"
+                        *ngIf="hospital.products && hospital.products.length > 0"
                       >
                       </mat-paginator>
                     </div>

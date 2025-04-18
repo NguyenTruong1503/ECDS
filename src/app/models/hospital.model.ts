@@ -17,12 +17,13 @@ export class HospitalExpand implements IHospitalExpand {
   constructor(
     public _id: string,
     public name: string,
+    public pageIndex: number,
+    public pageSize: number,
     public regionId?: IRegion,
     public products?: Product[],
     public expanded?: boolean,
     public pageProducts?: Product[], // dữ liệu hiển thị trên giao diện
-    public pageIndex?: number,
-    public pageSize?: number,
+
   ) {
     this._id = _id ;
     this.name = name;
@@ -30,7 +31,7 @@ export class HospitalExpand implements IHospitalExpand {
     this.products = products ? products : [];
     this.expanded = expanded ? expanded : false;
     this.pageProducts = pageProducts ? pageProducts : [];
-    this.pageIndex = pageIndex ? pageIndex : 0;
-    this.pageSize = pageSize ? pageSize : 10;
+    this.pageIndex = pageIndex ;
+    this.pageSize = pageSize ;
   }
 }

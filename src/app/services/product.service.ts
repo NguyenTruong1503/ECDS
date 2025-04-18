@@ -16,4 +16,9 @@ export class ProductService {
   getListAllCompany() : Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/companies`);
   }
+
+  getFilteredProducts(params: any): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/search`, { params });
+  }
+
 }
