@@ -9,7 +9,7 @@ import {IRegion, RegionExpand} from '../models/region.model';
 })
 export class RegionService {
 
-  private baseUrl= 'http://localhost:5000/api/regions';
+  private baseUrl= 'https://ecds-be.onrender.com/api/regions';
 
   constructor(private http: HttpClient) { }
 

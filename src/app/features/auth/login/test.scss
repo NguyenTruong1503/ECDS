@@ -1,9 +1,12 @@
-// Define custom colors
-$primary-color: #f5a623;
-$background-color: #ffecc7;
-$text-color: #333333;
-$secondary-text-color: #666666;
 
+
+// Define custom colors
+$primary-color: #f5a623; // Orange color for buttons and accents
+$background-color: #FFECC7; // Light peach background
+$text-color: #333333; // Dark text color
+$secondary-text-color: #666666; // Lighter text for secondary elements
+
+// Container styling
 .login-container {
   display: flex;
   justify-content: center;
@@ -19,23 +22,25 @@ $secondary-text-color: #666666;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 24px;
 
-    // Card title
+    // Card title (header section)
     mat-card-title {
       .login-header {
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 16px;
 
         img {
           width: 140px;
           height: auto;
           margin-bottom: 8px;
         }
+
         .login-title {
           font-size: 24px;
           font-weight: 300;
           color: $text-color;
           margin: 10px 0;
         }
+
         p {
           font-size: 14px;
           color: $secondary-text-color;
@@ -44,7 +49,7 @@ $secondary-text-color: #666666;
       }
     }
 
-    // Card content\
+    // Card content (form section)
     mat-card-content {
       form {
         display: flex;
@@ -57,7 +62,8 @@ $secondary-text-color: #666666;
           mat-label {
             color: $secondary-text-color;
           }
-          imput {
+
+          input {
             color: $text-color;
           }
 
@@ -66,34 +72,24 @@ $secondary-text-color: #666666;
             border-color: $primary-color;
           }
 
-          &.mat-focused {
-            .mat-form-field-outline {
-              color: $primary-color;
-            }
-
-            mat-label {
-              color: $primary-color;
-            }
-
-            .mat-form-field-outline-start,
-            .mat-form-field-outline-end,
-            .mat-form-field-outline-gap {
-              border-width: 2px;
-              border-color: $primary-color;
-            }
+          // Focus state
+          &.mat-focused .mat-form-field-outline {
+            border-color: $primary-color;
           }
         }
+
         .forgot-password {
-          text-align: left;
-          margin-top: -18px;
-          margin-bottom: 6px;
+          text-align: right;
+          margin-top: -8px;
+          margin-bottom: 16px;
+
           a {
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 12px;
             color: $primary-color;
             text-decoration: none;
+
             &:hover {
-              cursor: pointer;
+              text-decoration: underline;
             }
           }
         }
@@ -101,11 +97,11 @@ $secondary-text-color: #666666;
         .btn-login {
           background-color: $primary-color;
           color: white;
-          padding: 16px;
+          padding: 12px;
           font-size: 16px;
           border-radius: 4px;
           text-transform: uppercase;
-          transition: background-color ease-in-out 0.3s ;
+          transition: background-color 0.3s;
 
           &:hover {
             background-color: darken($primary-color, 10%);
@@ -114,20 +110,22 @@ $secondary-text-color: #666666;
       }
 
       .signup-text {
-        text-align: left;
+        text-align: center;
         margin: 16px 0;
         font-size: 14px;
         color: $secondary-text-color;
+
         a {
           color: $primary-color;
           text-decoration: none;
-          font-weight: 500;
+
           &:hover {
-            cursor: pointer;
+            text-decoration: underline;
           }
         }
       }
 
+      // Divider styling
       mat-divider {
         margin: 16px 0;
         position: relative;
@@ -138,37 +136,52 @@ $secondary-text-color: #666666;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          background-color: #F4F3F6;
+          background-color: white;
           padding: 0 8px;
           font-size: 12px;
+          color: $secondary-text-color;
         }
       }
+
+      // Google button styling
       .google-button {
         width: 100%;
         padding: 12px;
+        border: 1px solid #d3d3d3;
         border-radius: 4px;
-        border: 1px solid $primary-color;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 18px;
-        background-color: #F4F3F6;
+        gap: 8px;
+        background-color: $primary-color;
         color: $text-color;
         font-size: 14px;
-        transition: background-color 1s;
+        transition: background-color 0.3s;
 
         img {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           object-fit: contain;
         }
+
+        // Đảm bảo con trỏ và màu nền thay đổi khi hover
         &:hover {
-          background-color: $primary-color;
-          cursor: pointer;
+          cursor: pointer !important;
+          background-color: #f5f5f5 !important;
         }
+
       }
     }
-
   }
 }
 
+// Responsive adjustments
+@media (max-width: 600px) {
+  .login-container {
+    padding: 16px;
+
+    mat-card {
+      padding: 16px;
+    }
+  }
+}

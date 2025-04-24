@@ -9,7 +9,7 @@ import {Agent} from '../models/agent.model';
 export class AgentService {
 
   constructor(private http: HttpClient) { }
-  private baseUrl= 'http://localhost:5000/api/agents';
+  private baseUrl= 'https://ecds-be.onrender.com/api/agents';
 
   getAllAgents(): Observable<Agent[]>{
     return this.http.get<Agent[]>(`${this.baseUrl}`);

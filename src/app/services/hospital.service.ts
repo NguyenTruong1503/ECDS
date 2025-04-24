@@ -7,7 +7,7 @@ import {Hospital, HospitalExpand} from '../models/hospital.model';
   providedIn: 'root'
 })
 export class HospitalService {
-  private baseUrl= 'http://localhost:5000/api/hospitals';
+  private baseUrl= 'https://ecds-be.onrender.com/api/hospitals';
   constructor(private http: HttpClient) { }
   getHospitals(regionId: string): Observable<HospitalExpand[]> {
     return this.http.get<HospitalExpand[]>(`${this.baseUrl}/region/${regionId}`);

@@ -1,1 +1,35 @@
-<p>login works!</p>
+<div class="login-container">
+  <mat-card>
+    <mat-card-title>
+      <div class="login-header">
+        <img src="assets/images/logo.svg" alt="logo">
+        <h4 class="login-title">Welcome</h4>
+        <p>Login to Owloo Platform </p>
+      </div>
+    </mat-card-title>
+    <mat-card-content>
+      <form>
+        <mat-form-field appearance="outline">
+          <mat-label>Email address</mat-label>
+          <input matInput  name="email" type="email" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput  name="password" type="password" required>
+        </mat-form-field>
+        <div class="forgot-password">
+          <a >Forgot password?</a>
+        </div>
+        <button mat-raised-button color="primary" class="btn-login" >Continue</button>
+      </form>
+      <div class="signup-text">
+        Don't have an account? <a routerLink="/signup">Sign up</a>
+      </div>
+      <mat-divider>OR</mat-divider>
+      <button (click)="handleGoogleLogin()" type="button" class="google-button">
+        <img src="assets/icons/google.png" width="48" alt="google" />
+        <span>Continue with Google</span>
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

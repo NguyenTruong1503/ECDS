@@ -141,7 +141,6 @@ export class DashboardComponent implements OnInit {
   getListAgent() {
     this.agentService.getAllAgents().subscribe(agent => {
       this.agentsData = agent;
-      console.log( "Agent là data ", this.agentsData);
     })
   }
 
